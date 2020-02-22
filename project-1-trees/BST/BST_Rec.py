@@ -9,7 +9,7 @@ def findMinRec(root):
   return findMinRec(root.left)
   
 def findNextRec(root, value):
-  def findNext(root, succ, value):
+  def findNext(root, next, value):
     if root == None:
       return None
     if root.value == value:
@@ -18,22 +18,22 @@ def findNextRec(root, value):
     elif root.value > value:
       return findNext(root.left, root, value)
     else:
-      return findNext(root.right, succ, value)
-    return succ
+      return findNext(root.right, next, value)
+    return next
   return findNext(root, None, value)
 
 def findPrevRec(root, value):
-  def findPrev(root, pred, value):
+  def findPrev(root, prev, value):
     if root == None:
       return None
     if root.value == value:
       if root.left:
         return findMaxRec(root.left)
     elif root.value > value:
-      return findPrev(root.left, pred, value)
+      return findPrev(root.left, prev, value)
     else:
       return findPrev(root.right, root, value)
-    return pred
+    return prev
   return findPrev(root, None, value)
 
 def insertRec(root, node):
@@ -59,9 +59,9 @@ def deleteRec(root, value):
   elif root.value < value:
     root.right = deleteRec(root.right, value)
   else:
-    if not root.right:
+    if root.right == None:
       return root.left
-    if not root.left:
+    if root.left == None:
       return root.right
     temp = findMinRec(root.right)
     root.value = temp.value
