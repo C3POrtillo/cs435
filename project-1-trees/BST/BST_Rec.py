@@ -1,9 +1,3 @@
-class Node:
-  def __init__(self, value):
-    self.value = value
-    self.left = None
-    self.right = None
-
 def findMaxRec(root):
   if root.right == None:
     return root
@@ -42,43 +36,45 @@ def findPrevRec(root, value):
     return pred
   return findPrev(root, None, value)
 
-def insert(root, node):
+def insertRec(root, node):
   if root:
     if root.value < node.value:
       if root.right: 
-        insert(root.right, node)
+        insertRec(root.right, node)
       else:
         root.right = node
     else:
       if root.left:
-        insert(root.left, node)
+        insertRec(root.left, node)
       else:
         root.left = node
   else:
     root = node
 
-def delete(root, value):
+def deleteRec(root, value):
   if root == None:
     return root
-  if value < root.value:
-    root.left = delete(root.left, value)
-  elif value > root.value:
-    root.right = delete(root.right, value)
+  if root.value > value:
+    root.left = deleteRec(root.left, value)
+  elif root.value < value:
+    root.right = deleteRec(root.right, value)
   else:
-    if root.left == None:
-      root = root.right
-      return root
-    elif root.right == None:
-      root = root.left
-      return root
+    if not root.right:
+      return root.left
+    if not root.left:
+      return root.right
+    
     temp = findMinRec(root.right)
-    root.key = temp.key
-    root.right = delete(root.right, temp.key)
+    root.value = temp.value
+    root.right = deleteRec(root.right, temp.value)
   return root
 
 def inOrder(root):
-  if root:
-    inOrder(root.left)
-    print(root.value, end= " ")
-    inOrder(root.right)
+  def helper(root):
+    if root:
+      helper(root.left)
+      print(root.value, end= " ")
+      helper(root.right)
+  helper(root)
+  print()
 
