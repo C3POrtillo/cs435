@@ -63,7 +63,6 @@ def deleteRec(root, value):
       return root.left
     if not root.left:
       return root.right
-    
     temp = findMinRec(root.right)
     root.value = temp.value
     root.right = deleteRec(root.right, temp.value)
