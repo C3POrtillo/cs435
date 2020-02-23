@@ -97,7 +97,8 @@ def deleteIter(root, value):
         else:
           temp = findMinIter(curr.right)
           curr.value = temp.value
-          curr.right = deleteIter(curr.right, temp.value)
+          deleteIter(root, temp.value)
+          
 
 
 def inOrder(root):
