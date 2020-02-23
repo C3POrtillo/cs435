@@ -61,51 +61,43 @@ def insertIter(root, node):
     root = node
 
 def deleteIter(root, value):
-  def delete(node):
-    def inOrderHelper(node):
-      prev, curr = node, node.right
-      while curr.left:
-        prev = curr
-        curr = curr.left
-      if node.left:
-        prev.right = curr.right
-      else:
-        prev.left = curr.right
-      node.right = None
-      return node
-
-    if node:
-      if node.left == node.right == None:
-        return None
-      if node.left and node.right:
-        temp = inOrderHelper(node)
-        node.value = temp.value
-      elif node.left:
-        node = node.left
-      else:
-        node = node.right
-    return node
   if root == None:
     return root
   else:
     prev, curr = None, root
     while True:
-      if curr.value == value:
-        break
-
-      prev = curr
       if curr.value > value:
+        prev = curr
         curr = curr.left
       elif curr.value < value:
+        prev = curr
         curr = curr.right
-      
-    if prev == None:
-      return delete(curr)
-    if prev.left:
-      prev.left = delete(curr)
-    else:
-      prev.right = delete(curr)
-    return root
+      else:
+        if curr.left == curr.right == None:
+          if prev == None:
+            root = None
+          elif prev.left.value == curr.value:
+            prev.left = None
+          else:
+            prev.right = None
+        elif curr.left == None:
+          if prev == None:
+            root = curr.right
+          elif prev.left.value == curr.value:
+            prev.left = curr.right
+          else:
+            prev.right = curr.right
+        elif curr.right == None:
+          if prev == None:
+            root = curr.left
+          elif prev.left.value == curr.value:
+            prev.left = curr.left
+          else:
+            prev.right = curr.left
+        else:
+          temp = findMinIter(curr.right)
+          curr.value = temp.value
+          curr.right = deleteIter(curr.right, temp.value)
 
 
 def inOrder(root):
