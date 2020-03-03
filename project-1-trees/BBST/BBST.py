@@ -97,7 +97,6 @@ def deleteIter(root, value):
     if curr != None:
       curr.height -= 1
 
-
   if curr == None:
     return root
 
@@ -124,7 +123,6 @@ def deleteIter(root, value):
         prev.left = curr.right
       else:
         prev.right = curr.right
-
 
   else: # deleting root
     # No children
