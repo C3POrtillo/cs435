@@ -57,8 +57,9 @@ def insertIter(root, node):
         if curr == None:
           prev.right = node
           break
+    return root
   else:
-    root = node
+    return node
 
 def deleteIter(root, value):
   def deleteTwoChildren(node):
@@ -81,7 +82,6 @@ def deleteIter(root, value):
   prev, curr = None, root
   prevHasLeft = False
   while curr != None:
-    # decrement node heights by 1 as needed as the to be deleted node is along this path
     if curr.value == value:
       break
     prev = curr

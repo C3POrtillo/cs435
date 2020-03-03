@@ -37,19 +37,14 @@ def findPrevRec(root, value):
   return findPrev(root, None, value)
 
 def insertRec(root, node):
-  if root:
-    if root.value < node.value:
-      if root.right: 
-        insertRec(root.right, node)
-      else:
-        root.right = node
-    else:
-      if root.left:
-        insertRec(root.left, node)
-      else:
-        root.left = node
+  if root == None:
+    return node
+  if root.value < node.value:
+    root.right = insertRec(root.right, node)
   else:
-    root = node
+    root.left = insertRec(root.left, node)
+  return root
+
 
 def deleteRec(root, value):
   if root == None:
