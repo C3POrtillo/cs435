@@ -11,5 +11,6 @@ def getRandomArray(n):
 def getSortedArray(n):
   return [x for x in range(n, 0, -1)]
 
-print(getSortedArray(10))
-print(getRandomArray(10))
+if __name__ == "__main__":
+  print(getSortedArray(10))
+  print(getRandomArray(10))
