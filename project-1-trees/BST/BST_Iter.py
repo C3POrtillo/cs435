@@ -133,7 +133,7 @@ def deleteIter(root, value):
   
   return root
 
-def inOrder(root):
+def sortr(root):
   def helper(root):
     if root:
       helper(root.left)

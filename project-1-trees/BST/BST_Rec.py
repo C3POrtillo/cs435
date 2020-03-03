@@ -68,7 +68,7 @@ def deleteRec(root, value):
     root.right = deleteRec(root.right, temp.value)
   return root
 
-def inOrder(root):
+def sort(root):
   def helper(root):
     if root:
       helper(root.left)
