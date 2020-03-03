@@ -61,45 +61,77 @@ def insertIter(root, node):
     root = node
 
 def deleteIter(root, value):
+  def deleteTwoChildren(node):
+      temp = findMinIter(node.right)
+      node.value = temp.value
+      prev, toBeDeleted = None, node.right
+      while True:
+        if toBeDeleted.value == temp.value:
+          break
+        prev = toBeDeleted
+        toBeDeleted = toBeDeleted.left
+      if prev:
+        prev.left = None
+      else:
+        node.right = toBeDeleted.right if toBeDeleted.right else None
+
   if root == None:
     return root
-  else:
-    prev, curr = None, root
-    while True:
-      if curr.value > value:
-        prev = curr
-        curr = curr.left
-      elif curr.value < value:
-        prev = curr
-        curr = curr.right
-      else:
-        if curr.left == curr.right == None:
-          if prev == None:
-            root = None
-          elif prev.left.value == curr.value:
-            prev.left = None
-          else:
-            prev.right = None
-        elif curr.left == None:
-          if prev == None:
-            root = curr.right
-          elif prev.left.value == curr.value:
-            prev.left = curr.right
-          else:
-            prev.right = curr.right
-        elif curr.right == None:
-          if prev == None:
-            root = curr.left
-          elif prev.left.value == curr.value:
-            prev.left = curr.left
-          else:
-            prev.right = curr.left
-        else:
-          temp = findMinIter(curr.right)
-          curr.value = temp.value
-          deleteIter(root, temp.value)
-          
 
+  prev, curr = None, root
+  prevHasLeft = False
+  while curr != None:
+    # decrement node heights by 1 as needed as the to be deleted node is along this path
+    if curr.value == value:
+      break
+    prev = curr
+    prevHasLeft = value < prev.value 
+    if value < curr.value:
+      curr = curr.left
+    else:
+      curr = curr.right 
+
+  if curr == None:
+    return root
+
+  if prev:
+    # No children
+    if curr.left == curr.right == None:
+      if prevHasLeft:
+        prev.left = None
+      else:
+        prev.right = None
+
+    # 2 children 
+    elif curr.left and curr.right:
+      deleteTwoChildren(curr)
+    
+    # 1 child
+    elif curr.left:
+      if prevHasLeft:
+        prev.left = curr.left
+      else:
+        prev.right = curr.left
+    else:
+      if prevHasLeft:
+        prev.left = curr.right
+      else:
+        prev.right = curr.right
+
+  else: # deleting root
+    # No children
+    if curr.left == curr.right == None:
+      return None
+    # 2 children 
+    elif curr.left and curr.right:
+      deleteTwoChildren(curr)
+    # 1 child
+    elif curr.left:
+      root = curr.left
+    else:
+      root = curr.right
+  
+  return root
 
 def inOrder(root):
   def helper(root):
