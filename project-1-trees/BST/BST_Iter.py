@@ -1,13 +1,13 @@
 def findMaxIter(root):
   curr = root
   while curr.right:
-    curr = curr.right
+    curr = getRight(curr)
   return curr
 
 def findMinIter(root):
   curr = root
   while curr.left:
-    curr = curr.left
+    curr = getLeft(curr)
   return curr
 
 def findNextIter(root, value):
@@ -19,9 +19,9 @@ def findNextIter(root, value):
       break
     elif curr.value > value:
       next = curr
-      curr = curr.left
+      curr = getLeft(curr)
     else:
-      curr = curr.right
+      curr = getRight(curr)
   if curr.right:
     return findMinIter(curr.right)
   return next
@@ -34,10 +34,10 @@ def findPrevIter(root, value):
     if curr.value == value:
       break
     elif curr.value > value:
-      curr = curr.left
+      curr = getLeft(curr)
     else:
       prev = root
-      curr = curr.right
+      curr = getRight(curr)
   if curr.left:
     return findMaxIter(curr.left)
   return prev
@@ -48,12 +48,12 @@ def insertIter(root, node):
     while True:
       prev = curr
       if node.value < curr.value:
-        curr = curr.left
+        curr = getLeft(curr)
         if curr == None:
           prev.left = node
           break
       else:
-        curr = curr.right
+        curr = getRight(curr)
         if curr == None:
           prev.right = node
           break
@@ -70,11 +70,11 @@ def deleteIter(root, value):
         if toBeDeleted.value == temp.value:
           break
         prev = toBeDeleted
-        toBeDeleted = toBeDeleted.left
+        toBeDeleted = getLeft(toBeDeleted)
       if prev:
         prev.left = None
       else:
-        node.right = toBeDeleted.right if toBeDeleted.right else None
+        node.right = getRight(toBeDeleted) if toBeDeleted.right else None
 
   if root == None:
     return root
@@ -87,16 +87,16 @@ def deleteIter(root, value):
     prev = curr
     prevHasLeft = value < prev.value 
     if value < curr.value:
-      curr = curr.left
+      curr = getLeft(curr)
     else:
-      curr = curr.right 
+      curr = getRight(curr) 
 
   if curr == None:
     return root
 
   if prev:
     # No children
-    if curr.left == curr.right == None:
+    if curr.left == getRight(curr) == None:
       if prevHasLeft:
         prev.left = None
       else:
@@ -109,36 +109,34 @@ def deleteIter(root, value):
     # 1 child
     elif curr.left:
       if prevHasLeft:
-        prev.left = curr.left
+        prev.left = getLeft(curr)
       else:
-        prev.right = curr.left
+        prev.right = getLeft(curr)
     else:
       if prevHasLeft:
-        prev.left = curr.right
+        prev.left = getRight(curr)
       else:
-        prev.right = curr.right
+        prev.right = getRight(curr)
 
   else: # deleting root
     # No children
-    if curr.left == curr.right == None:
+    if curr.left == getRight(curr) == None:
       return None
     # 2 children 
     elif curr.left and curr.right:
       deleteTwoChildren(curr)
     # 1 child
     elif curr.left:
-      root = curr.left
+      root = getLeft(curr)
     else:
-      root = curr.right
+      root = getRight(curr)
   
   return root
 
-def sort(root):
-  def helper(root):
-    if root:
-      helper(root.left)
-      print(root.value, end= " ")
-      helper(root.right)
-  helper(root)
-  print()
+def getLeft(node):
+  node.visits += 1
+  return node.left
 
+def getRight(node):
+  node.visits +=1
+  return node.right

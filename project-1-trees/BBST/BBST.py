@@ -8,13 +8,13 @@ class Node:
 def findMaxIter(root):
   curr = root
   while curr.right:
-    curr = curr.right
+    curr = getRight(curr)
   return curr
 
 def findMinIter(root):
   curr = root
   while curr.left:
-    curr = curr.left
+    curr = getLeft(curr)
   return curr
 
 def findNextIter(root, value):
@@ -26,9 +26,9 @@ def findNextIter(root, value):
       break
     elif curr.value > value:
       next = curr
-      curr = curr.left
+      curr = getLeft(curr)
     else:
-      curr = curr.right
+      curr = getRight(curr)
   if curr.right:
     return findMinIter(curr.right)
   return next
@@ -41,10 +41,10 @@ def findPrevIter(root, value):
     if curr.value == value:
       break
     elif curr.value > value:
-      curr = curr.left
+      curr = getLeft(curr)
     else:
       prev = root
-      curr = curr.right
+      curr = getRight(curr)
   if curr.left:
     return findMaxIter(curr.left)
   return prev
@@ -57,7 +57,7 @@ def insertIter(root, node):
     while curr != None:
       # increment node heights by 1 as needed as the to be inserted node is traveling that path
       prev = curr
-      curr = curr.left if node.value < curr.value else curr.right
+      curr = getLeft(curr) if node.value < curr.value else curr.right
       if curr != None:
         curr.height += 1
     
@@ -79,7 +79,7 @@ def deleteIter(root, value):
           break
         prev = toBeDeleted
         toBeDeleted.height -= 1
-        toBeDeleted = toBeDeleted.left
+        toBeDeleted = getLeft(toBeDeleted)
       if prev:
         prev.left = None
       else:
@@ -98,9 +98,9 @@ def deleteIter(root, value):
     prev = curr
     prevHasLeft = value < prev.value 
     if value < curr.value:
-      curr = curr.left
+      curr = getLeft(curr)
     else:
-      curr = curr.right 
+      curr = getRight(curr) 
     if curr != None:
       curr.height -= 1
 
@@ -109,7 +109,7 @@ def deleteIter(root, value):
 
   if prev:
     # No children
-    if curr.left == curr.right == None:
+    if curr.left == getRight(curr) == None:
       if prevHasLeft:
         prev.left = None
       else:
@@ -122,27 +122,27 @@ def deleteIter(root, value):
     # 1 child
     elif curr.left:
       if prevHasLeft:
-        prev.left = curr.left
+        prev.left = getLeft(curr)
       else:
-        prev.right = curr.left
+        prev.right = getLeft(curr)
     else:
       if prevHasLeft:
-        prev.left = curr.right
+        prev.left = getRight(curr)
       else:
-        prev.right = curr.right
+        prev.right = getRight(curr)
 
   else: # deleting root
     # No children
-    if curr.left == curr.right == None:
+    if curr.left == getRight(curr) == None:
       return None
     # 2 children 
     elif curr.left and curr.right:
       deleteTwoChildren(curr)
     # 1 child
     elif curr.left:
-      root = curr.left
+      root = getLeft(curr)
     else:
-      root = curr.right
+      root = getRight(curr)
 
   setHeight(prev)
   setHeight(root)
@@ -161,8 +161,8 @@ def getBalance(root):
   return 0 if root == None else (getHeight(root.left) - getHeight(root.right)) # positive if left taller, negative if right taller
 
 def leftRotate(root):
-  right = root.right
-  leftSubtree = right.left
+  right = getRight(root)
+  leftSubtree = getLeft(right)
   
   right.left = root
   root.right = leftSubtree
@@ -173,8 +173,8 @@ def leftRotate(root):
   return right
 
 def rightRotate(root):
-  left = root.left
-  rightSubtree = left.right
+  left = getLeft(root)
+  rightSubtree = getRight(left)
   
   left.right = root
   root.left = rightSubtree
@@ -204,20 +204,10 @@ def balanceTree(root, value, deletion=False):
 
   return root
 
-def inOrder(root, debug=False):
-  def helper(root, str):
-    if root:
-      helper(root.left, str + "l")
-      print("{}".format(root.value) + (str if debug else ""), end = " | " if debug else " ")
-      helper(root.right, str + "r")
-  helper(root, "h")
-  print()
+def getLeft(node):
+  node.visits += 1
+  return node.left
 
-def preOrder(root, debug=False): 
-  def helper(root, str):
-    if root:
-      print("{}".format(root.value) + (str if debug else ""), end = " | " if debug else " ")
-      helper(root.left, str + "l")
-      helper(root.right, str + "r")
-  helper(root, "h")
-  print()
+def getRight(node):
+  node.visits +=1
+  return node.right

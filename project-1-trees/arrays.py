@@ -1,9 +1,9 @@
 import random
-import sys
+
 def getRandomArray(n):
   ret = []
   while len(ret) < n:
-    rand = random.randint(-sys.maxsize, sys.maxsize)
+    rand = random.randint(-n, n)
     if rand not in ret:
       ret.append(rand)
   return ret

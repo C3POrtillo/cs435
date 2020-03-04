@@ -3,3 +3,5 @@ class Node:
     self.value = value
     self.left = None
     self.right = None
+    self.height = 1
+    self.visits = 0

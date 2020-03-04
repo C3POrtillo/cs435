@@ -1,5 +1,3 @@
 *.pdf
 *.txt
-/project-1-trees/BST/*-main.py
-/project-1-trees/BBST/*-main.py
 __pycache__/
