@@ -1,8 +1,8 @@
 from BBST import BBST
 from BST import BST_Rec, BST_Iter
 from Node import Node
-from arrays import getRandomArray, getSortedArray
-from traversals import *
+from Arrays import getRandomArray, getSortedArray
+from Traversals import *
 
 random_input = getRandomArray(10000)
 sorted_input = getSortedArray(10000)
@@ -33,28 +33,28 @@ for i in random_input[:10]:
   bst_rec = BST_Rec.insertRec(bst_rec, Node(i))
   bst_iter = BST_Iter.insertIter(bst_iter, Node(i))
 
-print("BBST {} traversals: ".format(countTraversals(bbst)), end = "")
-preOrder(bbst, debug=True)
-
-print("BST {} traversals: ".format(countTraversals(bst_iter)), end = "")
-preOrder(bst_iter, debug=True )
-
-
-
 bbst = None
-bst_rec = None
 bst_iter = None
-print()
-print("Inserting 10 elements from sorted")
-for i in sorted_input[:10]:
+print("Inserting 10000 elements from random")
+for i in random_input:
   bbst = BBST.insertIter(bbst, Node(i))
   bst_iter = BST_Iter.insertIter(bst_iter, Node(i))
 
-print("BBST {} traversals: ".format(countTraversals(bbst)), end = "")
-preOrder(bbst, debug=True)
+print("BBST {} traversals".format(inOrder(bbst, output=False)))
+print("BST {} traversals".format(inOrder(bst_iter, output=False)))
 
-print("BST {} traversals: ".format(countTraversals(bst_iter)), end = "")
-preOrder(bst_iter, debug=True )
+
+bbst = None
+bst_iter = None
+print()
+print("Inserting 10000 elements from sorted")
+for i in sorted_input:
+  bbst = BBST.insertIter(bbst, Node(i))
+  bst_iter = BST_Iter.insertIter(bst_iter, Node(i))
+
+print("BBST {} traversals".format(inOrder(bbst, output=False)))
+print("BST {} traversals".format(inOrder(bst_iter, output=False)))
+
 
 
 

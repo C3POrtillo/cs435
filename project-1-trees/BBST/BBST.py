@@ -53,30 +53,32 @@ def insertIter(root, node):
   if root == None:
     return node
   else:
+    parents = []
     curr = root
     while curr != None:
-      # increment node heights by 1 as needed as the to be inserted node is traveling that path
+      parents.insert(0, curr)
       prev = curr
       curr = getLeft(curr) if node.value < curr.value else curr.right
-      if curr != None:
-        curr.height += 1
-    
+      
     if node.value < prev.value:
       prev.left = node
     else:
       prev.right = node
-  
-  setHeight(root)
+
+  for n in parents:
+    setHeight(n)
+
   return balanceTree(root, node.value)
 
 def deleteIter(root, value):
-  def deleteTwoChildren(node):
+  def deleteTwoChildren(node, parents):
       temp = findMinIter(node.right)
       node.value = temp.value
       prev, toBeDeleted = None, node.right
       while True:
         if toBeDeleted.value == temp.value:
           break
+        parents.insert(0, toBeDeleted)
         prev = toBeDeleted
         toBeDeleted.height -= 1
         toBeDeleted = getLeft(toBeDeleted)
@@ -91,18 +93,18 @@ def deleteIter(root, value):
 
   prev, curr = None, root
   prevHasLeft = False
+  parents = []
   while curr != None:
     # decrement node heights by 1 as needed as the to be deleted node is along this path
     if curr.value == value:
       break
+    parents.insert(0, curr)
     prev = curr
     prevHasLeft = value < prev.value 
     if value < curr.value:
       curr = getLeft(curr)
     else:
       curr = getRight(curr) 
-    if curr != None:
-      curr.height -= 1
 
   if curr == None:
     return root
@@ -115,9 +117,9 @@ def deleteIter(root, value):
       else:
         prev.right = None
 
-    # 2 children 
+    # 2 children
     elif curr.left and curr.right:
-      deleteTwoChildren(curr)
+      deleteTwoChildren(curr, parents)
     
     # 1 child
     elif curr.left:
@@ -137,15 +139,16 @@ def deleteIter(root, value):
       return None
     # 2 children 
     elif curr.left and curr.right:
-      deleteTwoChildren(curr)
+      deleteTwoChildren(curr, parents)
     # 1 child
     elif curr.left:
       root = getLeft(curr)
     else:
       root = getRight(curr)
 
-  setHeight(prev)
-  setHeight(root)
+  for n in parents:
+    setHeight(n)
+
   return balanceTree(root, value, deletion=True)   
 
   
