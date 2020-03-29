@@ -2,7 +2,7 @@ from BBST import BBST
 from BST import BST_Rec, BST_Iter
 from Node import Node
 from Arrays import getRandomArray, getSortedArray
-from Traversals import *
+from Traversals import inOrder
 
 random_input = getRandomArray(10000)
 sorted_input = getSortedArray(10000)

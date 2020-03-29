@@ -138,5 +138,5 @@ def getLeft(node):
   return node.left
 
 def getRight(node):
-  node.visits +=1
+  node.visits += 1
   return node.right
