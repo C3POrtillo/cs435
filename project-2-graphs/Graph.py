@@ -4,24 +4,24 @@ class Graph:
   def __init__(self):
     self.vertices = {}
 
-  def __len__(self):
-    return len(self.vertices)
-
+  def nodeExists(self, n : Node) -> bool:
+    return n != None and n in self.vertices
+   
   def addNode(self, node):
     if not isinstance(node, Node):
       node = Node(node)
     self.vertices[node] = node.neighbors = set()
 
   def addUndirectedEdge(self, first : Node, second : Node):
-    if first not in self.vertices:
+    if not self.nodeExists(first):
       self.addNode(first)
-    if second not in self.vertices:
+    if not self.nodeExists(second):
       self.addNode(second)
     self.vertices[first].add(second)
     self.vertices[second].add(first)
 
   def removeUndirectedEdge(self, first : Node, second : Node):
-    if first in self.vertices and second in self.vertices[first]:
+    if self.nodeExists(first) and self.nodeExists(second) and second in self.vertices[first]:
       self.vertices[first].remove(second)
 
     if second in self.vertices and first in self.vertices[second]:
@@ -84,3 +84,6 @@ class Graph:
 
   def __repr__(self) -> str:
     return "".join(self.__str__().split())
+
+  def __len__(self):
+    return len(self.vertices)

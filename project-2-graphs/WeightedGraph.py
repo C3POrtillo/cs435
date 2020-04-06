@@ -10,13 +10,13 @@ class WeightedGraph(DirectedGraph):
     self.vertices[node] = node.neighbors = {}
 
   def addWeightedEdge(self, first : Node, second : Node, edgeWeight : int):
-    if first not in self.vertices:
+    if not self.nodeExists(first):
       self.addNode(first)
-    if second not in self.vertices:
+    if not self.nodeExists(second):
       self.addNode(second)
     self.vertices[first][second] = edgeWeight
 
   def removeDirectedEdge(self, first : Node, second : Node):
-    if first in self.vertices and second in self.vertices[first]:
+    if self.nodeExists(first) and self.nodeExists(second) and second in self.vertices[first]:
       self.vertices[first].pop(second)
     

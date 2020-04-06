@@ -30,4 +30,13 @@ if __name__ == "__main__":
     for func in [TopSort.Kahns, TopSort.mDFS]:
       arr = func(g)
       print("Node Count: {} | {}".format(len(arr), arr))
+    a = g.getNode("A")
+    b = g.getNode("B")
+    if ignore and (a == None or b == None):
+      continue
+    g.removeDirectedEdge(a,b)
+    print(g)
     print()
+    for func in [TopSort.Kahns, TopSort.mDFS]:
+      arr = func(g)
+      print("Node Count: {} | {}".format(len(arr), arr))

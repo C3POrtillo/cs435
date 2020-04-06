@@ -6,16 +6,14 @@ from TopSort import TopSort
 from random import sample, randint
 from sys import argv
 
-maxWeight = 100 # maximum value weighted graphs (inclusive)
+maxWeight = 100 # for weighted graphs (inclusive)
 
 def populateGraph(g : Graph, n : int) -> Graph:
   def addRandomEdges(g : Graph) -> Graph:
     isDAG = isinstance(g, DirectedGraph)
     isWG = isinstance(g, WeightedGraph)
-    
-    if isWG:
-      addEdge = g.addWeightedEdge
-    elif isDAG:
+
+    if isDAG:
       addEdge = g.addDirectedEdge
     else:
       addEdge = g.addUndirectedEdge
@@ -31,7 +29,7 @@ def populateGraph(g : Graph, n : int) -> Graph:
         if (isDAG) and curr == node:
           continue
         if isWG:
-          addEdge(curr, node, randint(1, maxWeight))
+          g.addWeightedEdge(curr, node, randint(1, maxWeight))
         else:
           addEdge(curr, node)
 
@@ -45,24 +43,31 @@ def populateGraph(g : Graph, n : int) -> Graph:
   addRandomEdges(g)
   return g
 
-def createRandomUnewightedGraphIter(n: int) -> Graph:
+def createRandomUnewightedGraphIter(n : int) -> Graph:
   return populateGraph(Graph(), n)
 
 def createRandomDAGIter(n : int) -> DirectedGraph:
   return populateGraph(DirectedGraph(), n)
 
-def createRandomCompleteWeightedGraph(n: int) -> Graph:
+def createRandomCompleteWeightedGraph(n : int) -> Graph:
   return populateGraph(WeightedGraph(), n)
 
-def createLinkedList(n : int) -> Graph:
-  g = Graph()
+def createLinkedList(n : int, g : Graph) -> Graph:
+  isWG = isinstance(g, WeightedGraph)
+  if len(g) != 0: # Create new graph if input is not empty
+    g = WeightedGraph() if isWG else Graph()
+
   for i in range(n):
     g.addNode(i)
-  nodes = g.getAllNodes()
+
+  nodes = sorted(g.getAllNodes())
   prev = nodes.pop()
   while len(nodes) != 0:
     curr = nodes.pop()
-    g.addUndirectedEdge(prev, curr)
+    if isWG:
+      g.addWeightedEdge(prev, curr, 1)
+    else:
+      g.addUndirectedEdge(prev, curr)
     prev = curr
   return g
 
@@ -86,8 +91,8 @@ if __name__ == "__main__":
     exit()
 
   if argv[1] == "graph":
-    l_10000 = createLinkedList(10000)
-    l_100 = createLinkedList(100)
+    l_10000 = createLinkedList(10000, Graph())
+    l_100 = createLinkedList(100, Graph())
 
     print(BFTRecLinkedList(l_10000), end = "\n\n")
     print(BFTRecLinkedList(l_100), end = "\n\n")
@@ -114,5 +119,8 @@ if __name__ == "__main__":
       arr = func(x)
       print("Node Count: {} | {}".format(len(arr), arr))
     print()
+  elif argv[1] == "weighted":
+    x = createLinkedList(10, WeightedGraph())
+    print(x)
   else:
     print("Invalid argument")
