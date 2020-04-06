@@ -44,9 +44,10 @@ class Graph:
           return []
         ret = "["
         x = list(x)
-        prev = x[0]
-        for curr in x[1:]:
-          ret += "\"{}\",".format(prev)
+        prev = None
+        for curr in x:
+          if prev:
+            ret += "\"{}\",".format(prev)
           prev = curr
         if curr:
           ret += "\"{}\"".format(curr)
