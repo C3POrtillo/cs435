@@ -12,7 +12,6 @@ class DirectedGraph(Graph):
     
     self.vertices[first].add(second)
 
-
   def removeDirectedEdge(self, first : Node, second : Node):
     if first in self.vertices and second in self.vertices[first]:
       self.vertices[first].remove(second)

@@ -1,17 +1,16 @@
 from Node import Node
-from Graph import Graph
 from DirectedGraph import DirectedGraph
 
 class TopSort:
 
   @staticmethod
-  def Kahns(g : DirectedGraph) -> list:
-    def initializeInDegreeMap(g : DirectedGraph) -> dict:
+  def Kahns(graph : DirectedGraph) -> list:
+    def initializeInDegreeMap(graph : DirectedGraph) -> dict:
       inDegree = {}
-      for node in g.vertices:
+      for node in graph.getAllNodes():
         inDegree[node] = 0
       
-      for node in g.vertices:
+      for node in graph.getAllNodes():
         for neighbor in node.neighbors:
           inDegree[neighbor] += 1
 
@@ -22,17 +21,16 @@ class TopSort:
         if inDegree[node] == 0:
           queue.append(node)
           inDegree[node] -= 1
-      print(inDegree)
 
-    inDegree = initializeInDegreeMap(g)
-    print(inDegree)
+    inDegree = initializeInDegreeMap(graph)
     topSort = []
+
     queue = []
     addNodesWithoutDependenciesToQueue(inDegree, queue)
-
     while len(queue) > 0:
       curr = queue.pop(0)
       topSort.append(curr)
+      
       for neighbor in curr.neighbors:
         inDegree[neighbor] -= 1
       addNodesWithoutDependenciesToQueue(inDegree, queue)

@@ -6,8 +6,8 @@ from sys import argv
 
 def populateGraph(g : Graph, n : int) -> Graph:
   def addRandomEdges(g : Graph) -> Graph:
-
-    if isinstance(g, DirectedGraph):
+    isDAG = isinstance(g, DirectedGraph)
+    if isDAG:
       addEdge = g.addDirectedEdge
     else:
       addEdge = g.addUndirectedEdge
@@ -17,8 +17,11 @@ def populateGraph(g : Graph, n : int) -> Graph:
 
     while len(nodes) > 1:
       curr = nodes.pop()
-      random_nodes = sample(g.getAllNodes(), randint(0, n))
+      sampleSet = g.getAllNodes() if not isDAG else nodes
+      random_nodes = sample(sampleSet, randint(0, len(sampleSet)))
       for node in random_nodes:
+        if isDAG and curr == node:
+          continue
         addEdge(curr, node)
 
   if g == None:

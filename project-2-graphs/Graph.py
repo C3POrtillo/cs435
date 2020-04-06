@@ -38,12 +38,35 @@ class Graph:
         return node
 
   def __str__(self) -> str:
+    """Creates a JSON string representation of vertices and their edges"""
+    def iterToJSONStringify(x) -> str:
+      """Convert an array to a JSON parseable value"""
+      try:
+        x = list(x)
+        ret = "["
+        prev = x[0]
+        for curr in x[1:]:
+          ret += "\"{}\",".format(prev)
+          prev = curr
+        if curr:
+          ret += "\"{}\"".format(curr)
+        ret += "]"
+        return ret
+      except:
+        return []
+
+    sortedNodes = sorted(self.getAllNodes())
+    nodeFormat = "\t\"{}\": {}"
     ret = "{\n"
-    for node in sorted(self.vertices.keys()):
-      ret += "\t"
-      ret += str(node)
-      ret += ": "
-      ret += str(self.vertices[node])
-      ret += "\n"
-    ret += "}"
+    prev = sortedNodes[0]
+    for curr in sortedNodes[1:]:
+      ret += nodeFormat.format(prev, iterToJSONStringify(self.vertices[prev]))
+      ret += ",\n"
+      prev = curr
+    if curr:
+     ret += nodeFormat.format(curr, iterToJSONStringify(self.vertices[prev]))
+    ret += "\n}"
     return ret
+
+  def __repr__(self) -> str:
+    return "".join(self.__str__().split())

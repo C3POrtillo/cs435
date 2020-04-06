@@ -1,4 +1,4 @@
-from Main import createRandomUnewightedGraphIter, createRandomDAGIter, GraphSearch
+from Main import createRandomDAGIter
 from DirectedGraph import DirectedGraph
 from Node import Node
 from TopSort import *
@@ -21,10 +21,13 @@ x.addDirectedEdge(x.getNode("D"), x.getNode("G"))
 x.addDirectedEdge(x.getNode("H"), x.getNode("E"))
 x.addDirectedEdge(x.getNode("H"), x.getNode("F"))
 
-graphs = [x]
+graphs = [createRandomDAGIter(5), createRandomDAGIter(50), x]
 
 
 for g in graphs:
   print(g)
   print()
-  print(TopSort.Kahns(g))
+  for func in [TopSort.Kahns, TopSort.mDFS]:
+    arr = func(g)
+    print("Node Count: {} | {}".format(len(arr), arr))
+  print()
