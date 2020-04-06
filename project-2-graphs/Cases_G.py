@@ -4,7 +4,7 @@ from Graph import Graph
 ignore = True # To ignore invalid paths where a node does not exist
 
 r = createRandomUnewightedGraphIter(50) # random
-l = createLinkedList(25) # worst case
+l = createLinkedList(25, Graph()) # worst case
 x = Graph() # disconnected
 
 x.addNode("a")
