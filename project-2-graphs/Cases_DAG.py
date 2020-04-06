@@ -1,21 +1,11 @@
-from Main import createLinkedList, createRandomUnewightedGraphIter, GraphSearch
+from Main import createRandomUnewightedGraphIter, createRandomDAGIter, GraphSearch
+from DirectedGraph import DirectedGraph
 from GraphConversion import *
 
-ignore = True # To ignore invalid paths where end does not exist
+ignore = True # To ignore invalid paths where a node does not exist
+graphs = [createRandomDAGIter(10), createRandomUnewightedGraphIter(10)]
 
-r = createRandomUnewightedGraphIter(50) # random
-l = createLinkedList(25) # worst case
-x = Graph() # disconnected
-
-x.addNode("a")
-x.addNode("b")
-x.addNode("c")
-x.addNode("d")
-x.addUndirectedEdge(x.getNode("a"), x.getNode("b"))
-x.addUndirectedEdge(x.getNode("c"), x.getNode("d"))
-
-for g in [r, l, x]:
-  
+for g in graphs:
   edges = readable_edges(g)
   for node in sorted(edges.keys()):
     print("{} | {}".format(node, edges[node]))

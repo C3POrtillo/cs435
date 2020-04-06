@@ -4,16 +4,20 @@ class Graph:
   def __init__(self):
     self.graph = {}
 
-  def addNode(self, nodeVal):
-    node = Node(nodeVal)
-    self.graph[node] = node.neighbors = []
+  def addNode(self, node):
+    if not isinstance(node, Node):
+      node = Node(node)
+    self.graph[node] = node.neighbors = set()
 
   def addUndirectedEdge(self, first : Node, second : Node):
-    if first in self.graph and second not in self.graph[first]:
-      self.graph[first].append(second)
 
-    if second in self.graph and first not in self.graph[second]:
-      self.graph[second].append(first)
+    if first not in self.graph:
+      self.addNode(first)
+    if second not in self.graph:
+      self.addNode(second)
+
+    self.graph[first].add(second)
+    self.graph[second].add(first)
 
   def removeUndirectedEdge(self, first : Node, second : Node):
     if first in self.graph and second in self.graph[first]:
