@@ -1,6 +1,5 @@
 from Main import createLinkedList, createRandomUnewightedGraphIter, GraphSearch
-from GraphConversion import *
-
+from Graph import Graph
 ignore = True # To ignore invalid paths where a node does not exist
 
 r = createRandomUnewightedGraphIter(50) # random
@@ -15,16 +14,12 @@ x.addUndirectedEdge(x.getNode("a"), x.getNode("b"))
 x.addUndirectedEdge(x.getNode("c"), x.getNode("d"))
 
 for g in [r, l, x]:
-  
-  edges = readable_edges(g)
-  for node in sorted(edges.keys()):
-    print("{} | {}".format(node, edges[node]))
-  print()
+  print(g)
 
   bft = GraphSearch.BFTRec(g)
-  print("BFTRec()  :", nodes_to_val(bft))
+  print("BFTRec()  :", bft)
   bft = GraphSearch.BFTIter(g)
-  print("BFTIter() :", nodes_to_val(bft))
+  print("BFTIter() :", bft)
   print()
 
   for start in [0, 15, -1, "a", "c"]:
@@ -36,7 +31,7 @@ for g in [r, l, x]:
       if ignore and end_node == None:
         continue
       dfs = GraphSearch.DFSRec(start_node, end_node)
-      print("DFSRec({}, {})  :".format(start, end), nodes_to_val(dfs))
+      print("DFSRec({}, {})  :".format(start, end), dfs)
       dfs = GraphSearch.DFSIter(start_node, end_node)
-      print("DFSIter({}, {}) :".format(start, end), nodes_to_val(dfs))
+      print("DFSIter({}, {}) :".format(start, end), dfs)
     print()

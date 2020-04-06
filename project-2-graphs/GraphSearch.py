@@ -64,7 +64,7 @@ class GraphSearch:
           exhaust = False
 
       # Graph is disconnected and unvisited nodes exist
-      if exhaust and len(nodes) != 0 and len(visited) < len(graph.graph):
+      if exhaust and len(nodes) != 0 and len(visited) < len(graph):
         queue.append(nodes.pop())
 
       return helper(queue, visited)
@@ -95,7 +95,7 @@ class GraphSearch:
           exhaust = False
 
       # Graph is disconnected and unvisited nodes exist
-      if exhaust and len(nodes) != 0 and len(visited) < len(graph.graph):
+      if exhaust and len(nodes) != 0 and len(visited) < len(graph):
         queue.append(nodes.pop())
 
     return visited

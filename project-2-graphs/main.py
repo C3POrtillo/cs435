@@ -1,27 +1,25 @@
 from DirectedGraph import DirectedGraph
 from Graph import Graph
 from GraphSearch import GraphSearch
-from GraphConversion import nodes_to_val
 from random import sample, randint
 from sys import argv
 
 def populateGraph(g : Graph, n : int) -> Graph:
-  def randomEdges(g : Graph) -> Graph:
+  def addRandomEdges(g : Graph) -> Graph:
+
     if isinstance(g, DirectedGraph):
       addEdge = g.addDirectedEdge
     else:
       addEdge = g.addUndirectedEdge
 
     n = len(g)
-    nodes = sample(g.getAllNodes(), n) # randomize input
+    nodes = sample(g.getAllNodes(), n)
 
     while len(nodes) > 1:
       curr = nodes.pop()
-      random_nodes = sample(g.getAllNodes(), randint(0, n)) # random sample of 0 to n nodes
+      random_nodes = sample(g.getAllNodes(), randint(0, n))
       for node in random_nodes:
         addEdge(curr, node)
-        
-    return g
 
   if g == None:
     g = Graph()
@@ -29,7 +27,7 @@ def populateGraph(g : Graph, n : int) -> Graph:
   for i in range(n):
     g.addNode(i)
 
-  g = randomEdges(g)
+  addRandomEdges(g)
   return g
 
 
@@ -70,9 +68,9 @@ if __name__ == "__main__":
       l_10000 = createLinkedList(10000)
       l_100 = createLinkedList(100)
 
-      print(nodes_to_val(BFTRecLinkedList(l_10000)), end = "\n\n")
-      print(nodes_to_val(BFTRecLinkedList(l_100)), end = "\n\n")
-      print(nodes_to_val(BFTIterLinkedList(l_10000)))
+      print(BFTRecLinkedList(l_10000), end = "\n\n")
+      print(BFTRecLinkedList(l_100), end = "\n\n")
+      print(BFTIterLinkedList(l_10000))
     elif argv[1] == "directed":
       pass
     else:
