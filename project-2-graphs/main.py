@@ -6,23 +6,22 @@ from random import sample, randint
 from sys import argv
 
 def populateGraph(g : Graph, n : int) -> Graph:
-  def randomEdges(g : Graph):
+  def randomEdges(g : Graph) -> Graph:
     if isinstance(g, DirectedGraph):
       addEdge = g.addDirectedEdge
     else:
       addEdge = g.addUndirectedEdge
-      
+
     n = len(g)
     nodes = sample(g.getAllNodes(), n) # randomize input
 
     while len(nodes) > 1:
       curr = nodes.pop()
-      
-      node_count = randint(0, (n - 1)) # 0 <= node_count <= len(graph) - 1
-      random_nodes = sample(g.getAllNodes(), node_count)
-
+      random_nodes = sample(g.getAllNodes(), randint(0, n)) # random sample of 0 to n nodes
       for node in random_nodes:
         addEdge(curr, node)
+        
+    return g
 
   if g == None:
     g = Graph()
@@ -30,7 +29,7 @@ def populateGraph(g : Graph, n : int) -> Graph:
   for i in range(n):
     g.addNode(i)
 
-  randomEdges(g)
+  g = randomEdges(g)
   return g
 
 
