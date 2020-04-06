@@ -4,6 +4,9 @@ class Graph:
   def __init__(self):
     self.graph = {}
 
+  def __len__(self):
+    return len(self.graph)
+    
   def addNode(self, node):
     if not isinstance(node, Node):
       node = Node(node)
