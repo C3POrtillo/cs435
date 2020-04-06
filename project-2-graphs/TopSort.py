@@ -36,3 +36,25 @@ class TopSort:
       addNodesWithoutDependenciesToQueue(inDegree, queue)
 
     return topSort
+
+  @staticmethod
+  def mDFS(graph: DirectedGraph) ->list:
+    topSort = []
+    visited = set()
+    
+    for node in graph.getAllNodes():
+      stack = [node]
+      while len(stack) != 0:
+        curr = stack.pop()
+
+        if curr not in visited:
+          visited.add(curr)
+
+        n = len(stack)
+        for neighbor in node.neighbors:
+          if neighbor not in visited:
+            stack.insert(n, neighbor)
+
+      topSort.append(node)
+
+    return topSort[::-1]

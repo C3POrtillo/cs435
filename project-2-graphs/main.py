@@ -1,13 +1,21 @@
 from DirectedGraph import DirectedGraph
 from Graph import Graph
 from GraphSearch import GraphSearch
+from WeightedGraph import WeightedGraph
+from TopSort import TopSort
 from random import sample, randint
 from sys import argv
+
+maxWeight = 100 # maximum value weighted graphs (inclusive)
 
 def populateGraph(g : Graph, n : int) -> Graph:
   def addRandomEdges(g : Graph) -> Graph:
     isDAG = isinstance(g, DirectedGraph)
-    if isDAG:
+    isWG = isinstance(g, WeightedGraph)
+    
+    if isWG:
+      addEdge = g.addWeightedEdge
+    elif isDAG:
       addEdge = g.addDirectedEdge
     else:
       addEdge = g.addUndirectedEdge
@@ -20,9 +28,13 @@ def populateGraph(g : Graph, n : int) -> Graph:
       sampleSet = g.getAllNodes() if not isDAG else nodes
       random_nodes = sample(sampleSet, randint(0, len(sampleSet)))
       for node in random_nodes:
-        if isDAG and curr == node:
+        if (isDAG) and curr == node:
           continue
-        addEdge(curr, node)
+        if isWG:
+          addEdge(curr, node, randint(1, maxWeight))
+        else:
+          addEdge(curr, node)
+
 
   if g == None:
     g = Graph()
@@ -33,12 +45,14 @@ def populateGraph(g : Graph, n : int) -> Graph:
   addRandomEdges(g)
   return g
 
-
-def createRandomUnewightedGraphIter(n : int) -> Graph:
+def createRandomUnewightedGraphIter(n: int) -> Graph:
   return populateGraph(Graph(), n)
 
 def createRandomDAGIter(n : int) -> DirectedGraph:
   return populateGraph(DirectedGraph(), n)
+
+def createRandomCompleteWeightedGraph(n: int) -> Graph:
+  return populateGraph(WeightedGraph(), n)
 
 def createLinkedList(n : int) -> Graph:
   g = Graph()
@@ -67,16 +81,38 @@ def BFTIterLinkedList(graph : Graph) -> list:
 if __name__ == "__main__":
   try:
     argv[1] = argv[1].lower()
-    if argv[1] == "graph":
-      l_10000 = createLinkedList(10000)
-      l_100 = createLinkedList(100)
-
-      print(BFTRecLinkedList(l_10000), end = "\n\n")
-      print(BFTRecLinkedList(l_100), end = "\n\n")
-      print(BFTIterLinkedList(l_10000))
-    elif argv[1] == "directed":
-      pass
-    else:
-      print("Invalid argument")
   except:
     print("Missing argument")
+    exit()
+
+  if argv[1] == "graph":
+    l_10000 = createLinkedList(10000)
+    l_100 = createLinkedList(100)
+
+    print(BFTRecLinkedList(l_10000), end = "\n\n")
+    print(BFTRecLinkedList(l_100), end = "\n\n")
+    print(BFTIterLinkedList(l_10000))
+  elif argv[1] == "directed":
+    x = DirectedGraph()
+    for char in "ABCDEFGH":
+      x.addNode(char)
+
+    x.addDirectedEdge(x.getNode("A"), x.getNode("B"))
+    x.addDirectedEdge(x.getNode("A"), x.getNode("D"))
+
+    x.addDirectedEdge(x.getNode("C"), x.getNode("D"))
+    x.addDirectedEdge(x.getNode("C"), x.getNode("G"))
+    x.addDirectedEdge(x.getNode("C"), x.getNode("H"))
+
+    x.addDirectedEdge(x.getNode("D"), x.getNode("G"))
+
+    x.addDirectedEdge(x.getNode("H"), x.getNode("E"))
+    x.addDirectedEdge(x.getNode("H"), x.getNode("F"))
+    print(x)
+    print()
+    for func in [TopSort.Kahns, TopSort.mDFS]:
+      arr = func(x)
+      print("Node Count: {} | {}".format(len(arr), arr))
+    print()
+  else:
+    print("Invalid argument")

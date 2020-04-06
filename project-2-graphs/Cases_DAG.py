@@ -23,11 +23,11 @@ x.addDirectedEdge(x.getNode("H"), x.getNode("F"))
 
 graphs = [createRandomDAGIter(5), createRandomDAGIter(50), x]
 
-
-for g in graphs:
-  print(g)
-  print()
-  for func in [TopSort.Kahns, TopSort.mDFS]:
-    arr = func(g)
-    print("Node Count: {} | {}".format(len(arr), arr))
-  print()
+if __name__ == "__main__":
+  for g in graphs:
+    print(g)
+    print()
+    for func in [TopSort.Kahns, TopSort.mDFS]:
+      arr = func(g)
+      print("Node Count: {} | {}".format(len(arr), arr))
+    print()

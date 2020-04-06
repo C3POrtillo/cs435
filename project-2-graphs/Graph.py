@@ -13,12 +13,10 @@ class Graph:
     self.vertices[node] = node.neighbors = set()
 
   def addUndirectedEdge(self, first : Node, second : Node):
-
     if first not in self.vertices:
       self.addNode(first)
     if second not in self.vertices:
       self.addNode(second)
-
     self.vertices[first].add(second)
     self.vertices[second].add(first)
 
@@ -40,10 +38,12 @@ class Graph:
   def __str__(self) -> str:
     """Creates a JSON string representation of vertices and their edges"""
     def iterToJSONStringify(x) -> str:
-      """Convert an array to a JSON parseable value"""
-      try:
-        x = list(x)
+      """Convert an iterable to a JSON parseable value"""
+      if not isinstance(x, dict):
+        if len(x) == 0:
+          return []
         ret = "["
+        x = list(x)
         prev = x[0]
         for curr in x[1:]:
           ret += "\"{}\",".format(prev)
@@ -52,8 +52,21 @@ class Graph:
           ret += "\"{}\"".format(curr)
         ret += "]"
         return ret
-      except:
-        return []
+      else:
+        if len(x) == 0:
+          return {}
+        ret = "{"
+        prev = None
+        weightedStr = "\"{}\": {}"
+        for key in x:
+          if prev:
+            ret += weightedStr.format(prev, x[prev])
+            ret += ", "
+          prev = key
+        if key:
+          ret += weightedStr.format(key, x[key])
+        ret += "}"
+        return ret
 
     sortedNodes = sorted(self.getAllNodes())
     nodeFormat = "\t\"{}\": {}"
