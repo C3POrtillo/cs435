@@ -4,9 +4,6 @@ class Graph:
   def __init__(self):
     self.vertices = {}
 
-  def nodeExists(self, n : Node) -> bool:
-    return n != None and n in self.vertices
-   
   def addNode(self, node):
     if not isinstance(node, Node):
       node = Node(node)
@@ -35,6 +32,9 @@ class Graph:
       if node.val == str(nodeVal):
         return node
 
+  def nodeExists(self, n : Node) -> bool:
+    return n != None and n in self.vertices
+   
   def __str__(self) -> str:
     """Creates a JSON string representation of vertices and their edges"""
     def iterToJSONStringify(x) -> str:
@@ -59,7 +59,7 @@ class Graph:
         ret = "{"
         prev = None
         weightedStr = "\"{}\": {}"
-        for key in x:
+        for key in sorted(x.keys()):
           if prev:
             ret += weightedStr.format(prev, x[prev])
             ret += ", "

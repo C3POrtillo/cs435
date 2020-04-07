@@ -1,4 +1,3 @@
-from Node import Node
 from DirectedGraph import DirectedGraph
 
 class TopSort:

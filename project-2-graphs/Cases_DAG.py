@@ -1,6 +1,5 @@
 from Main import createRandomDAGIter
 from DirectedGraph import DirectedGraph
-from Node import Node
 from TopSort import *
 
 ignore = True # To ignore invalid paths where a node does not exist
