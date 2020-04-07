@@ -215,7 +215,8 @@ if __name__ == "__main__":
   elif argv[1] == "grid":
     dim = small
     g = createRandomGridGraph(dim)
-    print(g)
+    if visualize:
+      print(g)
     sourceNode = g.graphToArr()[0][0]
     destNode = g.graphToArr()[dim-1][dim-1]
     print(astar(sourceNode, destNode))
