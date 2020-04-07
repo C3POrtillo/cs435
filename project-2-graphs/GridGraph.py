@@ -1,7 +1,7 @@
 from Graph import Graph
 from Nodes import GridNode
 
-class GraphGrid(Graph):
+class GridGraph(Graph):
 
   def __init__(self):
     super().__init__()
@@ -42,24 +42,29 @@ class GraphGrid(Graph):
       self.minY = y
     elif y > self.maxY:
       self.maxY = y
-
-  def __str__(self):
-    """Creates a string representation of the grid with paths"""
+      
+  def graphToArr(self) -> list:
     sortedNodes = sorted(self.getAllNodes())
     xlen = abs(self.maxX - self.minX) + 1
     ylen = abs(self.maxY - self.minY) + 1
     graphArr = [["" for col in range(xlen)] for row in range(ylen)]
-    pad = 3
     for node in sortedNodes:
       graphArr[node.y][node.x] = node
+
+    return graphArr
+  def __str__(self):
+    """Creates a string representation of the grid with paths"""
+    ret = []
+    horiF = "{} {} {}"
+    pad = 3
+    for node in sorted(self.getAllNodes()):
       l = len(str(node))
       if l > pad:
         pad = l
 
-    ret = []
-    horiF = "{} {} {}"
-  
-  
+    graphArr = self.graphToArr()
+
+    xlen = abs(self.maxX - self.minX) + 1
     for row in range(xlen):
       hori = ""
       vert = ""

@@ -1,10 +1,10 @@
 from DirectedGraph import DirectedGraph
 from Graph import Graph
 from GraphSearch import GraphSearch
-from GraphGrid import GraphGrid
+from GridGraph import GridGraph
 from WeightedGraph import WeightedGraph
 from TopSort import TopSort
-from Nodes import Node
+from Nodes import Node, GridNode
 from random import sample, randint
 from sys import argv
 from math import inf
@@ -68,8 +68,8 @@ def createRandomDAGIter(n : int) -> DirectedGraph:
 def createRandomCompleteWeightedGraph(n : int) -> Graph:
   return populateGraph(WeightedGraph(), n)
 
-def createRandomGridGraph(n : int) -> GraphGrid:
-  g = GraphGrid()
+def createRandomGridGraph(n : int) -> GridGraph:
+  g = GridGraph()
   for row in range(n):
     for col in range(n):
       g.addGridNode(col, row, "{},{}".format(col, row))
@@ -120,7 +120,7 @@ def dijkstras(start : Node) -> dict:
   def minDist(distances: dict, visited:set) -> Node:
     ans = None
     m = inf
-    for curr in distances.keys():
+    for curr in distances:
       if curr not in visited and distances[curr] <= m:
         m = distances[curr]
         ans = curr
@@ -133,10 +133,55 @@ def dijkstras(start : Node) -> dict:
     visited.add(curr)
     
     for neighbor in curr.neighbors:
-      distanceMap[neighbor] = distanceMap[curr] + curr.neighbors[neighbor]
+      if neighbor not in visited:
+        if neighbor in distanceMap:
+          g = distanceMap[curr] + curr.neighbors[neighbor]
+          if  g < distanceMap[neighbor]:
+            distanceMap[neighbor] = g
+        else:
+          distanceMap[neighbor] = distanceMap[curr] + curr.neighbors[neighbor]
 
     curr = minDist(distanceMap, visited)
   return distanceMap
+
+def astar(sourceNode : GridNode, destNode : GridNode) -> list:
+  def manhattan(curr : GridNode, destNode : GridNode):
+    xDist = abs(curr.x - destNode.x)
+    yDist = abs(curr.y - destNode.y)
+    return xDist + yDist
+
+  def minDist(distances: dict, visited:set) -> Node:
+    ans = None
+    m = inf
+
+    for curr in distances:
+      if curr not in visited and sum(distances[curr]) <= m:
+        m = sum(distances[curr])
+        ans = curr
+    return ans
+
+  distanceMap = {sourceNode : (0, manhattan(sourceNode, destNode))}
+  visited = []
+  curr = sourceNode
+
+  while curr != None and curr != destNode:
+    if curr not in visited:
+      visited.append(curr)
+
+    for neighbor in curr.neighbors:
+      if neighbor not in visited:
+        if neighbor in distanceMap:
+          g = distanceMap[curr][0] + 1
+          if g < distanceMap[neighbor][0]:
+            distanceMap[neighbor][0] = g
+        else:
+          g = distanceMap[curr][0] + 1
+          h = manhattan(neighbor, destNode)
+          distanceMap[neighbor] = [g, h]
+
+    curr = minDist(distanceMap, visited)
+  visited.append(curr)
+  return visited
 
 if __name__ == "__main__":
   try:
@@ -168,8 +213,11 @@ if __name__ == "__main__":
       print("Dijkstras Map for Node {}: {}".format(n, dijkstras(n)))
       print()
   elif argv[1] == "grid":
-    for g in [createRandomGridGraph(3), createRandomGridGraph(5), createRandomGridGraph(tiny)]:
-      print(g)
-      print()
+    dim = 5
+    g = createRandomGridGraph(dim)
+    print(g)
+    sourceNode = g.graphToArr()[0][0]
+    destNode = g.graphToArr()[dim-1][dim-1]
+    print(astar(sourceNode, destNode))
   else:
     print("Invalid argument")
