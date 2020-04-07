@@ -1,9 +1,10 @@
 from DirectedGraph import DirectedGraph
 from Graph import Graph
 from GraphSearch import GraphSearch
+from GraphGrid import GraphGrid
 from WeightedGraph import WeightedGraph
 from TopSort import TopSort
-from Node import Node
+from Nodes import Node
 from random import sample, randint
 from sys import argv
 from math import inf
@@ -16,32 +17,38 @@ medium = 1000
 large = 10000
 
 def populateGraph(g : Graph, n : int) -> Graph:
-  def addRandomEdges(g : Graph) -> Graph:
-    isDAG = isinstance(g, DirectedGraph)
-    isWG = isinstance(g, WeightedGraph)
 
-    nodes = sample(g.getAllNodes(), len(g))
+  def addRandomEdges(g : Graph) -> Graph:
+
+    def addWeightedEdges(curr, g : Graph):
+      for node in g.getAllNodes():
+        if node == curr:
+          continue
+        g.addWeightedEdge(curr, node, randint(1, maxWeight))
+
+    def addUnweightedEdges(curr, g : Graph, isDAG):
+      sampleSet = g.getAllNodes() if not isDAG else nodes
+      random_nodes = sample(sampleSet, randint(0, len(sampleSet)))
+      for node in random_nodes:
+        if isDAG:
+          if curr == node:
+            continue
+          g.addDirectedEdge(curr, node)
+
+        else:
+          g.g.addUndirectedEdge(curr, node)
+
+    isWG = isinstance(g, WeightedGraph)
+    isDAG = isinstance(g, DirectedGraph)
+    nodes = g.getAllNodes()
 
     while len(nodes) > 1:
       curr = nodes.pop()
 
       if isWG:
-        for node in g.getAllNodes():
-          if node == curr:
-            continue
-          g.addWeightedEdge(curr, node, randint(1, maxWeight))
-
+        addWeightedEdges(curr, g)
       else:
-        sampleSet = g.getAllNodes() if not isDAG else nodes
-        random_nodes = sample(sampleSet, randint(0, len(sampleSet)))
-        for node in random_nodes:
-          if isDAG and curr == node:
-            continue
-          
-          if isDAG:
-            g.addDirectedEdge(curr, node)
-          else:
-            g.g.addUndirectedEdge(curr, node)
+        addUnweightedEdges(curr, g, isDAG)
 
   if g == None:
     g = Graph()
@@ -61,6 +68,23 @@ def createRandomDAGIter(n : int) -> DirectedGraph:
 def createRandomCompleteWeightedGraph(n : int) -> Graph:
   return populateGraph(WeightedGraph(), n)
 
+def createRandomGridGraph(n : int) -> GraphGrid:
+  g = GraphGrid()
+  for row in range(n):
+    for col in range(n):
+      g.addGridNode(col, row, "{},{}".format(col, row))
+  nodes = g.getAllNodes()
+  while len(nodes) > 1:
+    curr = nodes.pop()
+    sampleSet = g.getAllNodes()
+    for node in sampleSet:
+      if not g.isNeighbor(curr, node):
+        continue
+      coin = randint(0,1)
+      if coin == 1:
+        g.addUndirectedEdge(curr, node)
+
+  return g
 def createLinkedList(n : int, g : Graph) -> Graph:
   isWG = isinstance(g, WeightedGraph)
   if len(g) != 0: # Create new graph if input is not empty
@@ -142,6 +166,10 @@ if __name__ == "__main__":
         print(g)
       n = g.getNode(str(randint(0, small-1)))
       print("Dijkstras Map for Node {}: {}".format(n, dijkstras(n)))
+      print()
+  elif argv[1] == "grid":
+    for g in [createRandomGridGraph(3), createRandomGridGraph(5), createRandomGridGraph(tiny)]:
+      print(g)
       print()
   else:
     print("Invalid argument")

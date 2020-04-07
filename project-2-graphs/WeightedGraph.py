@@ -1,6 +1,6 @@
 from Graph import Graph
 from DirectedGraph import DirectedGraph
-from Node import Node
+from Nodes import Node
 
 class WeightedGraph(DirectedGraph):
 

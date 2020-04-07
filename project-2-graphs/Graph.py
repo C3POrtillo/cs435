@@ -1,13 +1,13 @@
-from Node import Node
+from Nodes import Node
 class Graph:
 
   def __init__(self):
     self.vertices = {}
 
-  def addNode(self, node):
-    if not isinstance(node, Node):
-      node = Node(node)
-    self.vertices[node] = node.neighbors = set()
+  def addNode(self, nodeVal):
+    if not isinstance(nodeVal, Node):
+      nodeVal = Node(nodeVal)
+    self.vertices[nodeVal] = nodeVal.neighbors = set()
 
   def addUndirectedEdge(self, first : Node, second : Node):
     if not self.nodeExists(first):
@@ -18,10 +18,10 @@ class Graph:
     self.vertices[second].add(first)
 
   def removeUndirectedEdge(self, first : Node, second : Node):
-    if self.nodeExists(first) and self.nodeExists(second) and second in self.vertices[first]:
+    if self.nodeExists(first) and second in self.vertices[first]:
       self.vertices[first].remove(second)
 
-    if second in self.vertices and first in self.vertices[second]:
+    if self.nodeExists(second) and first in self.vertices[second]:
       self.vertices[second].remove(first)
 
   def getAllNodes(self) -> set:

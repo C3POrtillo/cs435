@@ -32,3 +32,9 @@ class Node:
 
   def __repr__(self) -> str:
     return self.__str__()
+
+class GridNode(Node):
+  def __init__(self, x, y, val):
+    super().__init__(val)
+    self.x = x
+    self.y = y

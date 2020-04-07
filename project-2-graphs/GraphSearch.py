@@ -1,4 +1,4 @@
-from Node import Node
+from Nodes import Node
 from Graph import Graph
 
 class GraphSearch:
