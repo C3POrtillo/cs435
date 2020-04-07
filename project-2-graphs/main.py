@@ -213,7 +213,7 @@ if __name__ == "__main__":
       print("Dijkstras Map for Node {}: {}".format(n, dijkstras(n)))
       print()
   elif argv[1] == "grid":
-    dim = 5
+    dim = small
     g = createRandomGridGraph(dim)
     print(g)
     sourceNode = g.graphToArr()[0][0]
