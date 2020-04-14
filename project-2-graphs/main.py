@@ -36,7 +36,7 @@ def populateGraph(g : Graph, n : int) -> Graph:
           g.addDirectedEdge(curr, node)
 
         else:
-          g.g.addUndirectedEdge(curr, node)
+          g.addUndirectedEdge(curr, node)
 
     isWG = isinstance(g, WeightedGraph)
     isDAG = isinstance(g, DirectedGraph)
