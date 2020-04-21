@@ -5,22 +5,24 @@ class GraphSearch:
 
   @staticmethod
   def DFSRec(start : Node, end : Node) -> list:
-    def helper(start : Node, end : Node, visited : list) -> list:
-      
-      visited.append(start)
-
-      if end in visited:
-        return visited
-
-      for node in start.neighbors:
-        if node not in visited:
-          if helper(node, end, visited):
-            return visited
 
     if start == None or end == None:
       return None
 
-    return helper(start, end, [])
+    return GraphSearch.DFSRecHelper(start, end, [])
+
+  @staticmethod
+  def DFSRecHelper(start : Node, end : Node, visited : list) -> list:
+  
+    visited.append(start)
+
+    if end in visited:
+      return visited
+
+    for node in start.neighbors:
+      if node not in visited:
+        if GraphSearch.DFSRecHelper(node, end, visited):
+          return visited
 
   @staticmethod
   def DFSIter(start : Node, end : Node) -> list:

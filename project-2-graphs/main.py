@@ -16,48 +16,47 @@ small = 100
 medium = 1000
 large = 10000
 
+def addWeightedEdges(curr : Node, g : Graph):
+  for node in g.getAllNodes():
+    if node == curr:
+      continue
+    g.addWeightedEdge(curr, node, randint(1, maxWeight))
+
+def addUnweightedEdges(curr : Node, g : Graph, isDAG : bool, nodes : set ):
+  sampleSet = g.getAllNodes() if not isDAG else nodes
+  random_nodes = sample(sampleSet, randint(0, len(sampleSet)))
+  for node in random_nodes:
+    if isDAG:
+      if curr == node:
+        continue
+      g.addDirectedEdge(curr, node)
+
+    else:
+      g.addUndirectedEdge(curr, node)
+
+def addRandomEdges(g : Graph) -> Graph:
+
+  isWG = isinstance(g, WeightedGraph)
+  isDAG = isinstance(g, DirectedGraph)
+  nodes = g.getAllNodes()
+
+  while len(nodes) > 1:
+    curr = nodes.pop()
+
+    if isWG:
+      addWeightedEdges(curr, g)
+    else:
+      addUnweightedEdges(curr, g, isDAG, nodes)
+  return g
+
 def populateGraph(g : Graph, n : int) -> Graph:
-
-  def addRandomEdges(g : Graph) -> Graph:
-
-    def addWeightedEdges(curr, g : Graph):
-      for node in g.getAllNodes():
-        if node == curr:
-          continue
-        g.addWeightedEdge(curr, node, randint(1, maxWeight))
-
-    def addUnweightedEdges(curr, g : Graph, isDAG):
-      sampleSet = g.getAllNodes() if not isDAG else nodes
-      random_nodes = sample(sampleSet, randint(0, len(sampleSet)))
-      for node in random_nodes:
-        if isDAG:
-          if curr == node:
-            continue
-          g.addDirectedEdge(curr, node)
-
-        else:
-          g.addUndirectedEdge(curr, node)
-
-    isWG = isinstance(g, WeightedGraph)
-    isDAG = isinstance(g, DirectedGraph)
-    nodes = g.getAllNodes()
-
-    while len(nodes) > 1:
-      curr = nodes.pop()
-
-      if isWG:
-        addWeightedEdges(curr, g)
-      else:
-        addUnweightedEdges(curr, g, isDAG)
-
   if g == None:
     g = Graph()
 
   for i in range(n):
     g.addNode(i)
 
-  addRandomEdges(g)
-  return g
+  return addRandomEdges(g)
 
 def createRandomUnewightedGraphIter(n : int) -> Graph:
   return populateGraph(Graph(), n)
@@ -85,6 +84,7 @@ def createRandomGridGraph(n : int) -> GridGraph:
         g.addUndirectedEdge(curr, node)
 
   return g
+
 def createLinkedList(n : int, g : Graph) -> Graph:
   isWG = isinstance(g, WeightedGraph)
   if len(g) != 0: # Create new graph if input is not empty
@@ -116,16 +116,16 @@ def BFTIterLinkedList(graph : Graph) -> list:
   except Exception as e:
     return e
 
-def dijkstras(start : Node) -> dict:
-  def minDist(distances: dict, visited:set) -> Node:
-    ans = None
-    m = inf
-    for curr in distances:
-      if curr not in visited and distances[curr] <= m:
-        m = distances[curr]
-        ans = curr
-    return ans
+def DMinDist(distances: dict, visited:set) -> Node:
+  ans = None
+  m = inf
+  for curr in distances:
+    if curr not in visited and distances[curr] <= m:
+      m = distances[curr]
+      ans = curr
+  return ans
 
+def dijkstras(start : Node) -> dict:
   distanceMap = {start: 0}
   visited = set()
   curr = start
@@ -141,25 +141,25 @@ def dijkstras(start : Node) -> dict:
         else:
           distanceMap[neighbor] = distanceMap[curr] + curr.neighbors[neighbor]
 
-    curr = minDist(distanceMap, visited)
+    curr = DMinDist(distanceMap, visited)
   return distanceMap
 
+def manhattan(curr : GridNode, destNode : GridNode):
+  xDist = abs(curr.x - destNode.x)
+  yDist = abs(curr.y - destNode.y)
+  return xDist + yDist
+
+def AMinDist(distances: dict, visited:set) -> Node:
+  ans = None
+  m = inf
+
+  for curr in distances:
+    if curr not in visited and sum(distances[curr]) <= m:
+      m = sum(distances[curr])
+      ans = curr
+  return ans
+
 def astar(sourceNode : GridNode, destNode : GridNode) -> list:
-  def manhattan(curr : GridNode, destNode : GridNode):
-    xDist = abs(curr.x - destNode.x)
-    yDist = abs(curr.y - destNode.y)
-    return xDist + yDist
-
-  def minDist(distances: dict, visited:set) -> Node:
-    ans = None
-    m = inf
-
-    for curr in distances:
-      if curr not in visited and sum(distances[curr]) <= m:
-        m = sum(distances[curr])
-        ans = curr
-    return ans
-
   distanceMap = {sourceNode : (0, manhattan(sourceNode, destNode))}
   visited = []
   curr = sourceNode
@@ -179,7 +179,7 @@ def astar(sourceNode : GridNode, destNode : GridNode) -> list:
           h = manhattan(neighbor, destNode)
           distanceMap[neighbor] = [g, h]
 
-    curr = minDist(distanceMap, visited)
+    curr = AMinDist(distanceMap, visited)
   visited.append(curr)
   return visited
 
@@ -213,7 +213,7 @@ if __name__ == "__main__":
       print("Dijkstras Map for Node {}: {}".format(n, dijkstras(n)))
       print()
   elif argv[1] == "grid":
-    dim = small
+    dim = tiny
     g = createRandomGridGraph(dim)
     if visualize:
       print(g)

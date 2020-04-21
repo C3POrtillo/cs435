@@ -18,10 +18,8 @@ class Graph:
     self.vertices[second].add(first)
 
   def removeUndirectedEdge(self, first : Node, second : Node):
-    if self.nodeExists(first) and second in self.vertices[first]:
+    if self.nodeExists(first) and self.nodeExists(second) and second in self.vertices[first]:
       self.vertices[first].remove(second)
-
-    if self.nodeExists(second) and first in self.vertices[second]:
       self.vertices[second].remove(first)
 
   def getAllNodes(self) -> set:
@@ -33,55 +31,58 @@ class Graph:
         return node
 
   def nodeExists(self, n : Node) -> bool:
-    return n != None and n in self.vertices
-   
+    return n in self.vertices
+
+  @staticmethod
+  def iterToJSONStringify(x) -> str:
+    """Convert an iterable to a JSON parseable value"""
+    if not isinstance(x, dict):
+      if len(x) == 0:
+        return []
+      ret = "["
+      x = list(x)
+      prev = None
+      for curr in x:
+        if prev:
+          ret += "\"{}\",".format(prev)
+        prev = curr
+      if curr:
+        ret += "\"{}\"".format(curr)
+      ret += "]"
+      return ret
+    else:
+      if len(x) == 0:
+        return {}
+      ret = "{"
+      prev = None
+      weightedStr = "\"{}\": {}"
+      for key in sorted(x.keys()):
+        if prev:
+          ret += weightedStr.format(prev, x[prev])
+          ret += ", "
+        prev = key
+      if key:
+        ret += weightedStr.format(key, x[key])
+      ret += "}"
+      return ret
+
   def __str__(self) -> str:
     """Creates a JSON string representation of vertices and their edges"""
-    def iterToJSONStringify(x) -> str:
-      """Convert an iterable to a JSON parseable value"""
-      if not isinstance(x, dict):
-        if len(x) == 0:
-          return []
-        ret = "["
-        x = list(x)
-        prev = None
-        for curr in x:
-          if prev:
-            ret += "\"{}\",".format(prev)
-          prev = curr
-        if curr:
-          ret += "\"{}\"".format(curr)
-        ret += "]"
-        return ret
-      else:
-        if len(x) == 0:
-          return {}
-        ret = "{"
-        prev = None
-        weightedStr = "\"{}\": {}"
-        for key in sorted(x.keys()):
-          if prev:
-            ret += weightedStr.format(prev, x[prev])
-            ret += ", "
-          prev = key
-        if key:
-          ret += weightedStr.format(key, x[key])
-        ret += "}"
-        return ret
 
     sortedNodes = sorted(self.getAllNodes())
     nodeFormat = "\t\"{}\": {}"
     ret = "{\n"
     prev = sortedNodes[0]
     for curr in sortedNodes[1:]:
-      ret += nodeFormat.format(prev, iterToJSONStringify(self.vertices[prev]))
+      ret += nodeFormat.format(prev, Graph.iterToJSONStringify(self.vertices[prev]))
       ret += ",\n"
       prev = curr
     if curr:
-     ret += nodeFormat.format(curr, iterToJSONStringify(self.vertices[prev]))
+     ret += nodeFormat.format(curr, Graph.iterToJSONStringify(self.vertices[prev]))
     ret += "\n}"
     return ret
 
+  
   def __repr__(self) -> str:
     return "".join(self.__str__().split())
 
